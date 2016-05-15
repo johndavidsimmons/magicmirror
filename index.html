@@ -8,17 +8,17 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<style type="text/css">
 	
+
 		* {
 			font-family: 'Open Sans', sans-serif;
 			list-style-type: none;
 			vertical-align: middle;
-			background-color: #000;
 			color: #FFF !important;
 			font-size: 24px;
 		}
 
 		body {
-			background-color: #000;
+			background-color: #000 !important;
 		}
 
 		#time {
@@ -48,9 +48,16 @@
 			font-size: 24px;
 		}
 
-		#highLow {
+		#highLow,
+		#traffic {
 			text-align: right;
 			font-size: 24px;
+		}
+
+		#none {
+			display: hidden;
+			height: 0;
+			width: 0;
 		}
 
 		#reddit {
@@ -58,6 +65,7 @@
 			padding-bottom: 1em;
 			font-size: 24px;
 		}
+
 
 		i {
 			vertical-align: 5%;
@@ -174,11 +182,12 @@
 					<div id="time"></div>
 					<div id="date"></div>
 					<div id="riseSet"></div>
-					<!-- <div id="cityState"></div> -->
 				</div>
 				<div class="col-xs-6">
 					<div id="temp"></div>
 					<div id="highLow"></div>
+					<div class="push" id="traffic"></div>
+					<div id="none"></div>
 				</div>
 			</div>
 			<div class="row push">
@@ -193,8 +202,10 @@
 
 <script type="text/javascript">
 		var y_api = "https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='ferndale, mi')&format=json"
+
+
 		call();
-		var interval = window.setInterval(call, 1800000);
+		var interval = window.setInterval(call, 600000);
 
 
 		function call() {
@@ -324,8 +335,46 @@
 		r_data = JSON.parse(r_xhr.responseText);
 
 		document.getElementById("reddit").innerHTML = r_data.data.children[0].data.title;
+
+		     
 	}
 
 
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfBRR4IEp_PYC-4q9cea7dJMItvPsWlFo&callback=initMap"
+		    async defer>
+		    </script>
+<script>
+
+
+
+	var map;
+
+	var eightmile = {lat: 42.444898, lng: -83.095477};
+	var three75 =  {lat: 42.339982, lng: -83.045655};
+	
+	function initMap() {
+	  map = new google.maps.Map(document.getElementById('none'), {
+	    center: {lat: 42.444898, lng: -83.095477},
+	    zoom: 12
+	  });
+
+	  var service = new google.maps.DistanceMatrixService;
+	  service.getDistanceMatrix({
+	  	origins: [eightmile, three75],
+	  	destinations: [eightmile, three75],
+	  	travelMode: google.maps.TravelMode.DRIVING,
+  	    unitSystem: google.maps.UnitSystem.IMPERIAL,
+  	    avoidHighways: false,
+  	    avoidTolls: false
+	  }, callback );
+
+	  function callback(response, status) {
+	  	console.log(response.rows[0].elements[1].duration.text);
+	  	document.getElementById("traffic").innerHTML = "8-Mile &#8594; 375: " + response.rows[0].elements[1].duration.text;
+	  }
+
+	  var interval = window.setInterval(initMap, 600000);
+	}
 </script>
 </html>
