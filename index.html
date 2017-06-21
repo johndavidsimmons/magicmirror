@@ -41,11 +41,13 @@
 		#date {
 			text-align: left;
 			font-size: 24px;
+			margin-left: -9px;
 		}
 
 		#temp {
 			font-size: 56px;
 			text-align: right;
+			margin-left: 1em;
 		}
 
 		#temp i {
@@ -58,6 +60,7 @@
 		#riseSet {
 			text-align: left;
 			font-size: 24px;
+			margin-left: -9px;
 		}
 
 		#highLow {
@@ -65,7 +68,20 @@
 			font-size: 24px;
 		}
 
-		#reddit {
+		#tomorrow {
+			text-align: right;
+			font-size: 14px;
+			font-weight: bold;
+			margin-top: -15px;
+		}
+
+		.tomorrow {
+			text-align: right;
+			font-size: 10px;
+
+		}
+
+		#stoic {
 			text-align: center;
 			padding-bottom: 1em;
 			font-size: 24px;
@@ -80,6 +96,17 @@
 			padding-top: 2em;
 		}
 
+		#moon {
+			text-align: center;
+		}
+
+		#moon i {
+			font-size: 2em;
+		}
+
+		canvas {
+
+		}
 
 	
 	</style>
@@ -88,46 +115,8 @@
 
 	function startTime() {
 		var today = new Date();
-		var h = today.getHours();
+		var h = ((today.getHours() + 11) % 12 + 1);
 
-		switch(h) {
-			case 13:
-				h = 1;
-				break;
-			case 14:
-				h = 2;
-				break;
-			case 15:
-				h = 3;
-				break;
-			case 16:
-				h = 4;
-				break;
-			case 17:
-				h = 5;
-				break;
-			case 18:
-				h = 6;
-				break;
-			case 19:
-				h = 7;
-				break;
-			case 20:
-				h = 8;
-				break;
-			case 21:
-				h = 9;
-				break;
-			case 22:
-				h = 10;
-				break;
-			case 23:
-				h = 11;
-				break;
-			case 0:
-				h = 12;
-				break;
-		}
 
 		var m = today.getMinutes();
 		var s = today.getSeconds();
@@ -182,21 +171,29 @@
 <body onload="startTime()">
 		<div class="container">
 			<div class="row push">
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<div id="time"></div>
 					<div id="date"></div>
 					<div id="riseSet"></div>
-					<!-- <div id="cityState"></div> -->
 				</div>
-				<div class="col-xs-6">
-					<div id="temp"></div>
+				<div class="col-xs-4">
+					<div id="moon">
+						<p id="moon-desc"></p>
+						<i id="moon-icon"></i>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div id="temp">						
+					</div>
 					<div id="highLow"></div>
+					<div class="tomorrow"><p style="font-size: 14px; padding-top: 2em;">Tomorrow</p></div>
+					<div id="tomorrow"></div>
 				</div>
 			</div>
 			<div class="row push">
 				<nav class="navbar navbar-default navbar-fixed-bottom">
 				  <div class="container">
-				    <div class="col-md-12 center-block text-center" id="reddit"></div>
+				    <div class="col-md-12 center-block text-center" id="stoic"></div>
 				  </div>
 				</nav>
 			</div>
@@ -204,5 +201,8 @@
 
 
 
-<script src="js/weather.js"></script>
+<script src="js/skycons.js"></script>
+<script src="js/darksky.js"></script>
+<script src="js/stoic.js"></script>
+
 </html>
